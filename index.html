@@ -121,26 +121,20 @@
 
             $(div).append(temp_html);
 
-            let deleteBtn = div.querySelector('.fa-window-close');
-            console.log(deleteBtn);
-            deleteBtn.addEventListener('click', () => {
-                console.log(uuid);
-            })
-            /*
             deleteBtn.addEventListener('click', () => {
                 let pass = 0;
                 getDocs(collection(db, "comments")).then((data) => {
-                    for (let i = 0; i < data.docs.length; i++) {
+                    for (let i = 1; i < data.docs.length; i++) {
                         pass = data.docs[i]._document.data.value.mapValue.fields.replyPassword
                     }
                 })
-                //let result = prompt("비밀번호를 입력하세요.", "");
-                if (result == pass) await deleteDoc(doc(db, "comments", uuid));
-                else {
-                    alert("비밀번호가 다릅니다.");
-                }
-                */
-            $('#replyBoard').append(temp_html);
+                // let result = prompt("비밀번호를 입력하세요.", "");
+                // if (result == pass) await deleteDoc(doc(db, "comments", uuid));
+                // else {
+                //     alert("비밀번호가 다릅니다.");
+                // }
+            $('#replyBoard').append(div);
+            });
         });
 
     </script>
