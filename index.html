@@ -32,7 +32,8 @@
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        //import { doc, deleteDoc } from "firebase/firestore";
+        import { deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // Firebase 구성 정보 설정
         const firebaseConfig = {
@@ -124,19 +125,26 @@
             let deleteBtn = div.querySelector('.fa-window-close');
 
             deleteBtn.addEventListener('click', () => {
-                let pass = 0;
+                let pass = "";
+                let result = prompt("비밀번호를 입력하세요.", "");
                 getDocs(collection(db, "comments")).then((data) => {
                     for (let i = 0; i < data.docs.length; i++) {
-                        
-                        pass = data.docs[i]._document.data.value.mapValue.fields.replyPassword;
-                        console.log('pass', pass)
+                        if (uuid == data.docs[i]._document.data.value.mapValue.fields.uuid.stringValue) {
+                            pass = data.docs[i]._document.data.value.mapValue.fields.replyPassword.stringValue;
+                            // console.log(pass);
+                            // console.log(data);
+                            if (result == data.docs[i]._document.data.value.mapValue.fields.replyPassword.stringValue) {
+                                const docRef = doc(db, "comments", data.docs[i]._key.path.segments[6]);
+                                deleteDoc(docRef);
+                                alert("댓글이 삭제되었습니다.");
+                            }
+                            else {
+                                alert("비밀번호가 다릅니다.");
+                            }
+                        }
                     }
                 })
-                //let result = prompt("비밀번호를 입력하세요.", "");
-                // if (result == pass) await deleteDoc(doc(db, "comments", uuid));
-                // else {
-                //     alert("비밀번호가 다릅니다.");
-                // }
+
             })
             $('#replyBoard').append(div);
         });
