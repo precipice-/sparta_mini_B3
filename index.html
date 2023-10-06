@@ -32,8 +32,7 @@
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // Firebase 구성 정보 설정
         const firebaseConfig = {
@@ -92,8 +91,8 @@
 
         //댓글 표시
         let docs = await getDocs(collection(db, "comments"));
-        docs.forEach((doc) => {
-            let row = doc.data();
+        docs.forEach((docx) => {
+            let row = docx.data();
             let replyId = row['replyId'];
             let replyPassword = row['replyPassword'];
             let replyContent = row['replyContent'];
@@ -134,8 +133,7 @@
                             // console.log(pass);
                             // console.log(data);
                             if (result == data.docs[i]._document.data.value.mapValue.fields.replyPassword.stringValue) {
-                                const docRef = doc(db, "comments", data.docs[i]._key.path.segments[6]);
-                                deleteDoc(docRef);
+                                deleteDoc(doc(db, "comments", data.docs[i]._key.path.segments[6]));
                                 alert("댓글이 삭제되었습니다.");
                             }
                             else {
@@ -144,7 +142,6 @@
                         }
                     }
                 })
-
             })
             $('#replyBoard').append(div);
         });
