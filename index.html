@@ -80,15 +80,6 @@
             window.location.reload();
         });
 
-        /*
-        $('#comment ${replycounter}').click(async function () {
-
-            let delete_docs = await getDocs(collection(db, "comments"));
-
-            //await deleteDoc(doc(db, "comments", commentNumber));
-        })
-        */
-
         //댓글 표시
         let docs = await getDocs(collection(db, "comments"));
         docs.forEach((docx) => {
@@ -130,8 +121,7 @@
                     for (let i = 0; i < data.docs.length; i++) {
                         if (uuid == data.docs[i]._document.data.value.mapValue.fields.uuid.stringValue) {
                             pass = data.docs[i]._document.data.value.mapValue.fields.replyPassword.stringValue;
-                            // console.log(pass);
-                            // console.log(data);
+                            // 파이어베이스 데이터 구조 해부해보기 console.log(data);
                             if (result == data.docs[i]._document.data.value.mapValue.fields.replyPassword.stringValue) {
                                 deleteDoc(doc(db, "comments", data.docs[i]._key.path.segments[6]));
                                 alert("댓글이 삭제되었습니다.");
