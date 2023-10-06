@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B_3조</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" ;>
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .fa {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: pointer
+        }
+
+        .fa-times-rectangle:before,
+        .fa-window-close:before {
+            content: "\f2d3";
+        }
+    </style>
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        //import { doc, deleteDoc } from "firebase/firestore";
+
+        // Firebase 구성 정보 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFT1tdXMTuTc4b-m3BwfotfL9wbQwRGy0",
+            authDomain: "sparta-cc99f.firebaseapp.com",
+            projectId: "sparta-cc99f",
+            storageBucket: "sparta-cc99f.appspot.com",
+            messagingSenderId: "884692541866",
+            appId: "1:884692541866:web:809ab17579458cbca10bd3"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        //댓글 저장
+        $("#commentBtn").click(async function () {
+            let replyId = $('#replyId').val();
+            let replyPassword = $('#replyPassword').val();
+            let replyContent = $('#replyContent').val();
+            let uuid = self.crypto.randomUUID();
+
+            if (replyId == "") {
+                alert("아이디를 입력하세요");
+                return;
+            }
+            if (replyPassword == "") {
+                alert("암호를 입력하세요");
+                return;
+            }
+            if (replyContent == "") {
+                alert("댓글내용이 존재하지 않습니다");
+                return;
+            }
+
+            let doc = {
+                'replyId': replyId,
+                'replyPassword': replyPassword,
+                'replyContent': replyContent,
+                'uuid': uuid,
+            };
+
+            await addDoc(collection(db, "comments"), doc)
+            alert("댓글이 저장되었습니다.");
+            window.location.reload();
+        });
+
+        /*
+        $('#comment ${replycounter}').click(async function () {
+
+            let delete_docs = await getDocs(collection(db, "comments"));
+
+            //await deleteDoc(doc(db, "comments", commentNumber));
+        })
+        */
+
+        //댓글 표시
+        let docs = await getDocs(collection(db, "comments"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+            let replyId = row['replyId'];
+            let replyPassword = row['replyPassword'];
+            let replyContent = row['replyContent'];
+            const uuid = row['uuid'];
+
+            const div = document.createElement('div');
+
+            let temp_html = `
+            <div class="card mt-2">
+                <div class="card-header p-2">
+                    <table>
+                        <tbody><tr class="align-middle">
+                                <td rowspan="2" class="pr-2"><i class="fa fa-user-o fa-2x" style="font-size: 30px;"></i></td>
+                                <td class="ml" style="font-size: 20px;">&nbsp;${replyId}&nbsp;&nbsp;</td>
+                                <td>
+                                    <span><i class="fa fa-window-close fa" aria-hidden="true"></i></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${replyContent}</p>
+                </div>
+            </div>`;
+
+            $(div).append(temp_html);
+
+            let deleteBtn = div.querySelector('.fa-window-close');
+            deleteBtn.addEventListener('click', () => {
+                let pass = 0;
+                let docs = await getDocs(collection(db, "comments"));
+                docs.forEach((doc) => {
+                    if (uuid == row['uuid']) pass = row['replyPassword'];
+                });
+
+                var result = prompt("비밀번호를 입력하세요.", "");
+                if (result == pass) await deleteDoc(doc(db, "comments", uuid));
+                else {
+                    alert("비밀번호가 다릅니다.");
+                }
+            });
+
+            $('#replyBoard').append(temp_html);
+        });
+
+    </script>
+</head>
+
+<body>
+    <!--https://sang12.co.kr/176/BootStrap4-%EB%8C%93%EA%B8%80%EC%B0%BD%28reply%29-%EB%A7%8C%EB%93%A4%EA%B8%B0-%231-->
+    <div class="card mb-2">
+        <div class="card-header bg-light">
+            <i class="fa fa-comment fa"></i> REPLY
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="form-inline mb-2">
+                        <label for="reply_Id"><i class="fa fa-user-circle-o fa-2x"></i></label>
+                        <input type="text" class="form-control ml-2" placeholder="Enter your id" id="replyId">
+                        <label for="reply_Password" class="ml-4"><i class="fa fa-unlock-alt fa-2x"></i></label>
+                        <input type="password" class="form-control ml-2" placeholder="Enter password"
+                            id="replyPassword">
+                    </div>
+                    <textarea class="form-control" id="replyContent" rows="3"></textarea>
+                    <button type="button" class="btn btn-dark mt-3" id="commentBtn">post reply</button>
+                </li>
+            </ul>
+        </div>
+        <div id="replyBoard">
+        </div>
+    </div>
+</body>
+
+</html>
