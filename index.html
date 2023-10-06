@@ -26,7 +26,7 @@
             justify-content: center;
         }
 
-        .teamname>button {
+        .teamname>span {
             margin-left: auto;
         }
 
@@ -217,7 +217,7 @@
         })
 
         $("#savebtn").click(async function () {
-            $('#tbox').toggle();
+            $('#tbox').slideToggle();
         })
 
         $("#endbtn").click(async function () {
@@ -323,7 +323,7 @@
 
                                         </div>
                                         <div class="card-footer">
-                                            <button class="btn btn-primary view-details"
+                                            <button class="btn btn-outline-danger"
                                                 data-name="${name}" data-image="${image}" data-mbti="${MBTI}" data-tmi="${TMI}">
                                                 자세히 보기
                                             </button>
@@ -336,15 +336,17 @@
     </script>
 </head>
 
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false"></body>
+
 <body>
     <div class="teamname">
         <h1 id="title">한 명이 왔조</h1>
-        <button id="savebtn" type="button" class="btn btn-primary btn-sm">팀원 추가하기</button>
+        <span id="savebtn" type="button" class="material-symbols-outlined" style="font-size: 50px;">person_add</span>
     </div>
     <div class="teamint">
         <img src="./9-introducing-myself___media_library_original_1600_900.webp" alt="A Developer" width="500" height="250">
     </div>
-    <div class="teambox" id="tbox">
+    <div class="teambox" id="tbox" style="display: none;">
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="image" placeholder="사진">
             <label for="floatingInput">사진</label>
@@ -362,8 +364,10 @@
             <label for="floatingInput">TMI</label>
         </div>
         <div class="teambtn">
-            <button id="postingbtn" type="button" class="btn btn-outline-primary">추가하기</button>
-            <button type="button" class="btn btn-light">닫기</button>
+            <span id="postingbtn" type="button" class="material-symbols-outlined"
+                style="font-size: 50px; margin: 0px 20px 0px 20px;">person_add</span>
+            <span id="endbtn" type="button" class="material-symbols-outlined"
+                style="font-size: 50px; color: red;">close</i>
         </div>
     </div>
     <div class="teamcards">
